@@ -4,6 +4,7 @@ import android.provider.Settings.Global
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlin.concurrent.thread
 import kotlin.math.truncate
 
@@ -70,7 +71,7 @@ fun main1(){
  * the program ending before they are done and in this case it is Thread.sleep(2000L)
  */
 
-fun main(){
+fun main2(){
     thread(isDaemon = true){
         Thread.sleep(1000L)
         println("Mercury")
@@ -91,9 +92,31 @@ fun main(){
  * General rule of the coroutine should never block threads, only suspend them
  * Both daemon and launch do not stops the program from ending like in the function
  * earlier we blocked the thread otherwise our program will end too early For such cases
- * we might use runBlocking
+ * we might use runBlocking, It blocks the thread it has been started on whenever it's coroutine
+ * is suspended.
+ *
+ * This means that the delay inside runBlocking will behave like Thread.sleep(1000L)
  */
 
+fun main(){
+
+    runBlocking{
+        delay(1000)
+        println("Mercury")
+    }
+
+    runBlocking {
+        delay(1000)
+        println("Venus")
+    }
+
+    runBlocking {
+        delay(500)
+        println("Earth")
+    }
+    println("Hello, ")
+
+}
 
 
 
