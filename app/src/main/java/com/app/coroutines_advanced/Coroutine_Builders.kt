@@ -34,6 +34,7 @@ fun normalFun() {
  */
 
 fun main1(){
+    //Global scope is not tied to the lifecycle such as: Activities Fragments and ViewModels
     GlobalScope.launch {
         delay(1000L)
         println("Mercury")
