@@ -1,12 +1,14 @@
 package com.app.coroutines_advanced
 
-import android.provider.Settings.Global
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.concurrent.thread
-import kotlin.math.truncate
 
 
 suspend fun suspendingFun() {
@@ -33,7 +35,7 @@ fun normalFun() {
  * that is launched into the air
  */
 
-fun main1(){
+fun main1() {
     //Global scope is not tied to the lifecycle such as: Activities Fragments and ViewModels
     GlobalScope.launch {
         delay(1000L)
@@ -72,16 +74,16 @@ fun main1(){
  * the program ending before they are done and in this case it is Thread.sleep(2000L)
  */
 
-fun main2(){
-    thread(isDaemon = true){
+fun main2() {
+    thread(isDaemon = true) {
         Thread.sleep(1000L)
         println("Mercury")
     }
-    thread(isDaemon = true){
+    thread(isDaemon = true) {
         Thread.sleep(1000L)
         println("Venus")
     }
-    thread(isDaemon = true){
+    thread(isDaemon = true) {
         Thread.sleep(500L)
         println("Earth")
     }
@@ -99,9 +101,9 @@ fun main2(){
  * This means that the delay inside runBlocking will behave like Thread.sleep(1000L)
  */
 
-fun main(){
+fun main3() {
 
-    runBlocking{
+    runBlocking {
         delay(1000)
         println("Mercury")
     }
@@ -119,14 +121,65 @@ fun main(){
 
 }
 
+/**
+ * It runs a new coroutine and blocks the current thread interruptibly until it's completion
+ * using a dispatcher we can make run on a different thread, still the thread on which this builder
+ * has been started will be blocked until the coroutine will be done
+ */
+
+fun main4() {
+
+    Thread.sleep(1000L)
+    println("Mercury")
+    Thread.sleep(1000L)
+    println("Venus")
+    Thread.sleep(500L)
+    println("Earth")
+    print("Hello, ")
+
+}
+
+fun main5() = runBlocking {
+
+    GlobalScope.launch {
+        delay(1000L)
+        println("Mercury")
+    }
+    GlobalScope.launch {
+        delay(1000L)
+        println("Venus")
+    }
+    GlobalScope.launch {
+        delay(500L)
+        println("Earth")
+    }
+
+    println("Hello, ")
+    delay(2000L) // Works as Thread.sleep(2000L)
+
+}
+
+/**
+ * Async Builder
+ * Similar to launch, but is designed to produce a value, The value needs to be returned
+ * by the lambda ex- pression. The async function returns an object of type Deferred<T>
+ * where T is the type of the produced value. Deferred has a suspending method await,
+ * which returns once it is ready.
+ *
+ * In the example below, the produced value is 42, and it's type Int
+ */
+
+fun main() = runBlocking {
+    val resultDeferred : Deferred<Int> = GlobalScope.async {
+        delay(1000L)
+        42
+    }
+
+    // do other stuff.....
+    val result : Int = resultDeferred.await()
 
 
-
-
-
-
-
-
+}
 
 
 
