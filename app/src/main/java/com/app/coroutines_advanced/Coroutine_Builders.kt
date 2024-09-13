@@ -1,5 +1,6 @@
 package com.app.coroutines_advanced
 
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -159,6 +160,26 @@ fun main5() = runBlocking {
 
 }
 
+suspend fun main6(){
+
+    GlobalScope.launch {
+        delay(1000L)
+        println("Mercury")
+    }
+    GlobalScope.launch {
+        delay(1000L)
+        println("Venus")
+    }
+    GlobalScope.launch {
+        delay(1000L)
+        println("Earth")
+    }
+    println("Hello, ")
+    delay(2000L)
+
+
+}
+
 /**
  * Async Builder
  * Similar to launch, but is designed to produce a value, The value needs to be returned
@@ -169,17 +190,29 @@ fun main5() = runBlocking {
  * In the example below, the produced value is 42, and it's type Int
  */
 
-fun main() = runBlocking {
-    val resultDeferred : Deferred<Int> = GlobalScope.async {
+fun main7() = runBlocking {
+    val resultDeferred: Deferred<Int> = GlobalScope.async {
         delay(1000L)
         42
     }
 
     // do other stuff.....
-    val result : Int = resultDeferred.await()
-
+    val result: Int = resultDeferred.await()
+    println(result) // 42
+    // or just
 
 }
+
+/**
+ * used runBlocking here so that we can suspend the coroutine until the value is received
+ * if we use the launch builder the function will end without waiting for the value to be returned
+ * so it won't print the value
+ */
+
+
+
+
+
 
 
 
