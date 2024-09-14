@@ -1,9 +1,7 @@
+@file:JvmName("NewName") //Name of the class
 package com.app.coroutines_advanced
 
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -11,11 +9,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.concurrent.thread
 
-
-suspend fun suspendingFun() {
-    // .....
-
-}
+//Changing the name of our main function class from default name
+//fun main(){
+//    println("Hello, World")
+//}
+//
+//suspend fun suspendingFun() {
+//    // .....
+//
+//}
 
 fun normalFun() {
     // .....
@@ -41,17 +43,22 @@ fun main1() {
     GlobalScope.launch {
         delay(1000L)
         println("Mercury")
+        println("Current thread: ${Thread.currentThread()}")
     }
     GlobalScope.launch {
         delay(1000L)
         println("Venus")
+        println("Current thread: ${Thread.currentThread()}")
     }
     GlobalScope.launch {
         delay(500L)
         println("Earth")
+        println("Current thread: ${Thread.currentThread()}")
     }
     println("Hello,")
+    println("Current thread: ${Thread.currentThread()}")
     Thread.sleep(2000L)
+
 }
 
 /**
@@ -140,7 +147,7 @@ fun main4() {
 
 }
 
-fun main5() = runBlocking {
+fun main() = runBlocking {
 
     GlobalScope.launch {
         delay(1000L)
@@ -160,7 +167,7 @@ fun main5() = runBlocking {
 
 }
 
-suspend fun main6(){
+suspend fun main6() {
 
     GlobalScope.launch {
         delay(1000L)
@@ -176,6 +183,13 @@ suspend fun main6(){
     }
     println("Hello, ")
     delay(2000L)
+
+    /**
+     * Hello,
+     * Mercury
+     * Venus
+     * Earth
+     */
 
 
 }
@@ -209,6 +223,50 @@ fun main7() = runBlocking {
  * so it won't print the value
  */
 
+fun main8() = runBlocking {
+
+    val res1 = GlobalScope.async{
+        delay(1000L)
+        "Text 1"
+    }
+
+    val res2 = GlobalScope.async{
+        delay(3000L)
+        "Text 2"
+    }
+
+    val res3 = GlobalScope.async {
+        delay(3000)
+        "Text 3"
+    }
+
+    println(res1.await())
+    println(res2.await())
+    println(res3.await())
+
+    /**
+     * Text 1
+     * Text 2
+     * Text 3
+     */
+
+}
+
+/**
+ * async builder is similar to launch, but it has support for returning a value
+ * but async is all about producing the values
+ */
+
+fun main9() = runBlocking{
+    // Don't do this
+    // This is misleading to use async as launch
+    GlobalScope.async {
+        delay(1000L)
+        println("World")
+    }
+    println("Hello")
+    delay(2000L)
+}
 
 
 
