@@ -147,7 +147,7 @@ fun main4() {
 
 }
 
-fun main() = runBlocking {
+fun main5() = runBlocking {
 
     GlobalScope.launch {
         delay(1000L)
