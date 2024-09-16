@@ -17,26 +17,66 @@ import kotlin.coroutines.CoroutineContext
  * This allows for easy context specification and modification.
  */
 
-fun main(){
+fun main13() {
 
-    val name : CoroutineName = CoroutineName("A name")
-    val element1 : CoroutineContext.Element = name
-    val element2 : CoroutineContext.Element = name
-    val context : CoroutineContext = element1 + element2
+    val name: CoroutineName = CoroutineName("A name")
+    val element1: CoroutineContext.Element = name
+    val element2: CoroutineContext.Element = name
+    val context: CoroutineContext = element1 + element2
 
-    val job : Job = Job()
-    val jobElement : CoroutineContext.Element = job
-    val jobContext : CoroutineContext = jobElement
+    val job: Job = Job()
+    val jobElement: CoroutineContext.Element = job
+    val jobContext: CoroutineContext = jobElement
 
-    GlobalScope.launch(CoroutineName("A") + Job()){
+    // This shit is crazy
+    GlobalScope.launch(context + jobContext) {
 
     }
+
 }
 
 /**
  * SupervisorJob, CoroutineExceptionHandler, and dispatchers from Dispatchers
  * are essential coroutine contexts. They will be discussed in detail later.
  */
+
+/**
+ * CoroutineContext is like a collection. Use get() or square brackets
+ * to find elements by key. If the element exists, it's returned; otherwise,
+ * null.
+ */
+
+fun main14(){
+
+    val ctx : CoroutineContext = CoroutineName("A Name")
+
+    val coroutineName : CoroutineName? = ctx[CoroutineName]
+    // or ctx.get(CoroutineName)
+    println(coroutineName?.name) // A name
+    val job : Job? = ctx[Job] // or ctx.get(Job)
+    println(job) // null
+
+    /**
+     * A Name
+     * null
+     */
+
+}
+
+/**
+ * In Kotlin, CoroutineContext is built-in, while Job and CoroutineName are from kotlinx.coroutines
+ * To access CoroutineName, use CoroutineName directly. It's a companion object, not a class.
+ */
+
+/**
+ * In kotlinx.coroutines, companion objects are often used as keys
+ * This makes it easier to remember key-value pairs. For example, CoroutineName
+ * is a key, and Job is an interface with multiple implementations.
+ */
+
+interface Job : CoroutineContext.Element {
+    companion object Key : CoroutineContext.Key<Job>
+}
 
 
 
