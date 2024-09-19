@@ -1,9 +1,13 @@
 package com.app.coroutines_advanced
 
 import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -166,7 +170,7 @@ fun main18() {
  *     An operation to update the accumulator based on its current state and the current element
  */
 
-fun main() {
+fun main19() {
 
     val ctx = CoroutineName("Name1") + Job()
 
@@ -181,6 +185,95 @@ fun main() {
     // CoroutineName(Name1) , JobImpl{Active}@dbab622e
 
 }
+
+/**
+ * Coroutine context and builders
+ * CoroutineContext is a way to hold and pass data in coroutines. By default,
+ * a child coroutine inherits its context from its parent, establishing a parent-child relationship.
+ */
+
+fun CoroutineScope.log(msg: String) {
+
+    val name = coroutineContext[CoroutineName]?.name
+    println("[$name] $msg")
+
+}
+
+fun main20() = runBlocking(CoroutineName("main")) {
+    log("Started") // [main] thread
+    val v1 = async {
+        delay(500)
+        log("Running async") // [main] running async
+        42
+    }
+    launch {
+        delay(1000)
+        log("Running launch") // [main] Running launch
+    }
+    log("The answer is ${v1.await()}")
+    // [main] The answer is 42
+}
+
+/**
+ * Each child might have a specific context defined in the argument.
+ * The context overrides the one from the parent
+ */
+
+fun main() = runBlocking(CoroutineName("main")) {
+    log("Started") // [main] Started
+    val v1 = async(CoroutineName("c1")) {
+        delay(500)
+        log("Runnging async") // [c1] Running async
+        42
+    }
+    launch(CoroutineName("c2")){
+        delay(1000)
+        log("Running launch") // [c2] Running launch
+    }
+    log("The answer is ${v1.await()}")
+    // [main] The answer is 42
+}
+
+/**
+ * To calculate a coroutine context, use the formula:
+ * defaultContext + parentContext + childContext.
+ *
+ * Child context elements override those in the parent, while defaults apply only for unspecified keys.
+ * Defaults set Dispatchers.Default if no ContinuationInterceptor is present and CoroutineId in debug mode.
+ * A mutable context called Job facilitates communication between a coroutine's parent and child,
+ * which will be explored in the next chapters.
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
